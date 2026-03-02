@@ -19,15 +19,15 @@
     <div class="col-12 md:col-3">
       <span class="p-float-label">
         <p-multiSelect
-          id="typeId"
+          id="documentTypeId"
           [options]="documentTypes"
-          formControlName="typeId"
+          formControlName="documentTypeId"
           appendTo="body"
           [autoDisplayFirst]="false"
           [addOnBlur]="true"
           display="chip"
         ></p-multiSelect>
-        <label for="typeId">
+        <label for="documentTypeId">
           {{ 'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_TYPE' | translate }}
         </label>
       </span>
@@ -55,7 +55,7 @@
         <p-multiSelect
           id="status-input"
           [options]="documentStatus"
-          formControlName="state"
+          formControlName="lifeCycleState"
           appendTo="body"
           [autoDisplayFirst]="false"
           [addOnBlur]="true"
@@ -112,14 +112,14 @@
     <div class="col-12 md:col-3">
       <span class="p-float-label">
         <input
-          id="createdBy"
+          id="createBy"
           pInputText
           type="text"
-          formControlName="createdBy"
+          formControlName="createBy"
           pattern="^[a-zA-Z0-9-_][\sa-zA-Z0-9-_]*"
           class="p-inputtext p-component"
         />
-        <label for="createdBy">{{
+        <label for="createBy">{{
           'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_CREATEDBY' | translate
         }}</label>
       </span>

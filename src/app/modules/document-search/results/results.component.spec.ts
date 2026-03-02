@@ -217,7 +217,6 @@ describe('ResultsComponent', () => {
     let event = { first: 0, rows: 20 };
     component.results = [
       {
-        version: 18,
         creationDate: '2023-05-30T15:43:41.332643+05:30',
         creationUser: 'onecx',
         modificationDate: '2023-06-02T11:23:38.729242+05:30',
@@ -228,7 +227,6 @@ describe('ResultsComponent', () => {
         lifeCycleState: LifeCycleState.DRAFT,
         documentVersion: '1',
         channel: {
-          version: 13,
           creationDate: '2023-05-30T15:43:41.343211+05:30',
           creationUser: 'onecx',
           modificationDate: '2023-06-02T11:23:38.729352+05:30',
@@ -238,7 +236,6 @@ describe('ResultsComponent', () => {
         },
         tags: [],
         type: {
-          version: 0,
           creationDate: '2023-05-30T20:57:15.7098+05:30',
           creationUser: 'Monalisha',
           modificationDate: null,
@@ -247,7 +244,6 @@ describe('ResultsComponent', () => {
           name: 'Financial Document',
         },
         specification: {
-          version: 0,
           creationDate: '2023-06-02T11:23:38.727768+05:30',
           creationUser: 'onecx',
           modificationDate: '2023-06-02T11:23:38.727768+05:30',
@@ -260,7 +256,6 @@ describe('ResultsComponent', () => {
         characteristics: [],
         relatedParties: [],
         relatedObject: {
-          version: 2,
           creationDate: '2023-05-30T15:43:41.347429+05:30',
           creationUser: 'onecx',
           modificationDate: '2023-06-01T12:02:20.786417+05:30',

@@ -8,9 +8,9 @@ import { SelectItem } from 'primeng/api';
 // Application imports
 import {
   DocumentControllerV1APIService,
+  DocumentSearchCriteriaDTO,
   DocumentTypeControllerV1APIService,
   DocumentTypeDTO,
-  GetDocumentByCriteriaRequestParams,
   LifeCycleState,
 } from 'src/app/generated';
 
@@ -21,9 +21,9 @@ import {
 })
 export class DocumentCriteriaAdvancedComponent implements OnInit {
   @Input()
-  criteria: GetDocumentByCriteriaRequestParams;
+  criteria: DocumentSearchCriteriaDTO;
   @Output() criteriaSubmitted =
-    new EventEmitter<GetDocumentByCriteriaRequestParams>();
+    new EventEmitter<DocumentSearchCriteriaDTO>();
   @Output() resetEmitter = new EventEmitter();
 
   criteriaGroup: UntypedFormGroup;
@@ -74,12 +74,12 @@ export class DocumentCriteriaAdvancedComponent implements OnInit {
     this.criteriaGroup = this.formBuilder.group({
       channelName: null,
       name: null,
-      typeId: null,
-      state: null,
+      documentTypeId: null,
+      lifeCycleState: null,
       id: null,
       startDate: null,
       endDate: null,
-      createdBy: null,
+      createBy: null,
       objectReferenceId: null,
       objectReferenceType: null,
     });

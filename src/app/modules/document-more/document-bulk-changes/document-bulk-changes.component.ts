@@ -330,7 +330,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
     let searchResults = JSON.parse(localStorage.getItem('searchResults'));
     this.isShow = false;
     this.documentV1Service
-      .getDocumentByCriteria(JSON.parse(criteria))
+      .getDocumentByCriteria({ documentSearchCriteriaDTO: criteria ? JSON.parse(criteria) : {} })
       .subscribe({
         next: (data: any) => {
           this.isShow = true;
@@ -616,7 +616,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
    */
   onBulkUpdate(data: DocumentCreateUpdateDTO[]): void {
     const params: BulkUpdateDocumentRequestParams = {
-      bulkDocumentCreateUpdateDTO: data,
+      documentCreateUpdateDTO: data,
     };
 
     this.documentV1Service.bulkUpdateDocument(params).subscribe({
@@ -671,7 +671,7 @@ export class DocumentBulkChangesComponent implements OnInit, OnDestroy {
       checkedDocumentIds.push(docs.id);
     });
     this.documentV1Service
-      .deleteBulkDocumentByIds(checkedDocumentIds)
+      .deleteBulkDocuments({ requestBody: checkedDocumentIds })
       .subscribe({
         next: () => {
           this.portalMessageService.success({

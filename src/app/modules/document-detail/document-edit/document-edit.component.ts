@@ -637,9 +637,9 @@ export class DocumentEditComponent implements OnInit {
    */
   documentDeleteAttachments(attachmentsId: string[]) {
     let params = {
-      deletedAttachmentsIds: attachmentsId,
+      requestBody: attachmentsId,
     };
-    this.documentV1Service.deleteFile(params).subscribe({
+    this.documentV1Service.deleteFilesInBulk(params).subscribe({
       next: () => {
         this.portalMessageService.success({
           summaryParameters: { attachmentslength: attachmentsId.length },

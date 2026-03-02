@@ -42,7 +42,6 @@ describe('BasicFormArrayComponent', () => {
         creationUser: 'john',
         modificationDate: '09-03-2023',
         modificationUser: 'john',
-        version: 1,
         id: '1',
         description: 'sample test case',
         externalStorageURL: '',

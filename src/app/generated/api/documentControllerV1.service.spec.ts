@@ -3,8 +3,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
   BulkUpdateDocumentRequestParams,
   CreateDocumentRequestParams,
+  DeleteBulkDocumentsRequestParams,
   DeleteDocumentByIdRequestParams,
-  DeleteFileRequestParams,
+  DeleteFilesInBulkRequestParams,
   DocumentControllerV1APIService,
   GetDocumentByCriteriaRequestParams,
   GetDocumentByIdRequestParams,
@@ -54,6 +55,7 @@ describe('DocumentTypeControllerV1APIService', () => {
   it('should check response of createDocument is defined', () => {
     const value: CreateDocumentRequestParams = {
       documentCreateUpdateDTO: {
+        name: '',
         channel: {},
         typeId: '1',
       },
@@ -68,17 +70,17 @@ describe('DocumentTypeControllerV1APIService', () => {
     expect(serviceSpy).toBeDefined();
   });
 
-  it('should check response of deleteFile is defined', () => {
-    const values: DeleteFileRequestParams = {
-      deletedAttachmentsIds: ['1', '2'],
+  it('should check response of deleteFilesInBulk is defined', () => {
+    const values: DeleteFilesInBulkRequestParams = {
+      requestBody: ['1', '2'],
     };
-    const serviceSpy = service.deleteFile(values);
+    const serviceSpy = service.deleteFilesInBulk(values);
     expect(serviceSpy).toBeDefined();
   });
 
   it('should check response of getDocumentByCriteria is defined', () => {
     const value: GetDocumentByCriteriaRequestParams = {
-      id: '1',
+      documentSearchCriteriaDTO: {},
     };
     const serviceSpy = service.getDocumentByCriteria(value);
     expect(serviceSpy).toBeDefined();
@@ -108,16 +110,17 @@ describe('DocumentTypeControllerV1APIService', () => {
     expect(serviceSpy).toBeDefined();
   });
 
-  it('should check response of deleteBulkDocumentByIds is defined', () => {
-    const value = ['1', '2'];
-    const serviceSpy = service.deleteBulkDocumentByIds(value);
+  it('should check response of deleteBulkDocuments is defined', () => {
+    const value: DeleteBulkDocumentsRequestParams = { requestBody: ['1', '2'] };
+    const serviceSpy = service.deleteBulkDocuments(value);
     expect(serviceSpy).toBeDefined();
   });
 
   it('should check response of bulkUpdateDocument is defined', () => {
     const value: BulkUpdateDocumentRequestParams = {
-      bulkDocumentCreateUpdateDTO: [
+      documentCreateUpdateDTO: [
         {
+          name: '',
           channel: {},
           typeId: '1',
         },

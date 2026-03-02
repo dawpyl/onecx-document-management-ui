@@ -32,7 +32,7 @@ describe('DocumentTypeControllerV1APIService', () => {
 
   it('should check response of createDocumentType is defined', () => {
     const value: CreateDocumentTypeRequestParams = {
-      documentTypeCreateUpdateDTO: {},
+      documentTypeCreateUpdateDTO: { name: '' },
     };
     const serviceSpy = service.createDocumentType(value);
     expect(serviceSpy).toBeDefined();
@@ -53,7 +53,7 @@ describe('DocumentTypeControllerV1APIService', () => {
   it('should check response of updateDocumentTypeById is defined', () => {
     const value: UpdateDocumentTypeByIdRequestParams = {
       id: '1',
-      documentTypeCreateUpdateDTO: {},
+      documentTypeCreateUpdateDTO: { name: '' },
     };
     const serviceSpy = service.updateDocumentTypeById(value);
     expect(serviceSpy).toBeDefined();

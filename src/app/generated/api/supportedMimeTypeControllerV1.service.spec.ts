@@ -35,7 +35,7 @@ describe('SupportedMimeTypeControllerV1APIService', () => {
 
   it('should check response of createSupportedMimeType is defined', () => {
     const value: CreateSupportedMimeTypeRequestParams = {
-      supportedMimeTypeCreateUpdateDTO: {},
+      supportedMimeTypeCreateUpdateDTO: { name: '' },
     };
     const serviceSpy = service.createSupportedMimeType(value);
     expect(serviceSpy).toBeDefined();
@@ -60,7 +60,7 @@ describe('SupportedMimeTypeControllerV1APIService', () => {
   it('should check response of updateSupportedMimeTypeById is defined', () => {
     const value: UpdateSupportedMimeTypeByIdRequestParams = {
       id: '1',
-      supportedMimeTypeCreateUpdateDTO: {},
+      supportedMimeTypeCreateUpdateDTO: { name: '' },
     };
     const serviceSpy = service.updateSupportedMimeTypeById(value);
     expect(serviceSpy).toBeDefined();
