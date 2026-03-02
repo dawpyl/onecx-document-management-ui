@@ -11,14 +11,7 @@
  */
 
 
-export interface CategoryDTO { 
-    modificationCount?: number;
-    creationDate?: string;
-    creationUser?: string;
-    modificationDate?: string;
-    modificationUser?: string;
-    id?: string;
-    name?: string;
-    categoryVersion?: string;
+export interface FileMultipartBodyDTO { 
+    file?: any;
 }
 
