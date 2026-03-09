@@ -360,7 +360,7 @@ describe('DocumentEditComponent', () => {
 
   it('should show success message and call getDocumentDetail after deleting attachments', () => {
     const attachmentsId = ['attachmentId1', 'attachmentId2', 'attachmentId3'];
-    spyOn(component['documentV1Service'], 'deleteFile').and.returnValue(
+    spyOn(component['documentV1Service'], 'deleteFilesInBulk').and.returnValue(
       of(null)
     );
     const getDocumentDetailSpy = spyOn(component, 'getDocumentDetail');
@@ -377,7 +377,7 @@ describe('DocumentEditComponent', () => {
 
   it('should show error message and call getDocumentDetail after failing to delete attachments', () => {
     const attachmentsId = ['attachmentId1', 'attachmentId2', 'attachmentId3'];
-    spyOn(component['documentV1Service'], 'deleteFile').and.returnValue(
+    spyOn(component['documentV1Service'], 'deleteFilesInBulk').and.returnValue(
       throwError(null)
     );
     const getDocumentDetailSpy = spyOn(component, 'getDocumentDetail');
@@ -622,6 +622,7 @@ describe('DocumentEditComponent', () => {
 
   it('should handle document edit and update successfully', () => {
     const data: DocumentCreateUpdateDTO = {
+      name: '',
       channel: undefined,
       typeId: '',
     };
@@ -639,6 +640,7 @@ describe('DocumentEditComponent', () => {
 
   it('should handle document edit and update successfully', () => {
     const data: DocumentCreateUpdateDTO = {
+      name: '',
       channel: undefined,
       typeId: '',
     };

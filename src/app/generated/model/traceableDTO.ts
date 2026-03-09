@@ -11,14 +11,10 @@
  */
 
 
-export interface CategoryDTO { 
-    modificationCount?: number;
-    creationDate?: string;
-    creationUser?: string;
-    modificationDate?: string;
-    modificationUser?: string;
-    id?: string;
-    name?: string;
-    categoryVersion?: string;
+export interface TraceableDTO { 
+    createdBy?: string;
+    createdDate?: string;
+    lastModifiedBy?: string;
+    lastModifiedDate?: string;
 }
 

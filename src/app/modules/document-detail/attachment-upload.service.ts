@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 // Application imports
 import { Configuration } from 'src/app/generated/configuration';
 import { CustomHttpParameterCodec } from 'src/app/generated/encoder';
-import { storageUploadAuditDTO } from 'src/app/generated/model/storageUploadAuditDTO';
+import { StorageUploadAuditDTO } from 'src/app/generated/model/storageUploadAuditDTO';
 import { BASE_PATH } from 'src/app/generated/variables';
 import { convertToCSV } from 'src/app/utils';
 
@@ -84,8 +84,8 @@ export class AttachmentUploadService {
   */
   public getFailedAttachmentRecords(
     documentId: string
-  ): Observable<storageUploadAuditDTO[]> {
-    return this.http.get<storageUploadAuditDTO[]>(
+  ): Observable<StorageUploadAuditDTO[]> {
+    return this.http.get<StorageUploadAuditDTO[]>(
       `${this.configuration.basePath}/document/files/upload/failed/${documentId}`
     );
   }

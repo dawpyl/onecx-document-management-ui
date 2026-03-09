@@ -8,72 +8,16 @@ tags:
   - name: DocumentControllerV1
   - name: DocumentSpecificationControllerV1
   - name: DocumentTypeControllerV1
+  - name: FileControllerV1
   - name: SupportedMimeTypeControllerV1
+
 paths:
   /document:
-    get:
-      tags:
-        - DocumentControllerV1
-      description: Gets documents by criteria
-      operationId: getDocumentByCriteria
-      parameters:
-        - name: channelName
-          in: query
-          schema:
-            type: string
-        - name: id
-          in: query
-          schema:
-            format: int64
-            type: integer
-        - name: name
-          in: query
-          schema:
-            type: string
-        - name: page
-          in: query
-          schema:
-            format: int32
-            default: '0'
-            minimum: 0
-            type: integer
-        - name: size
-          in: query
-          schema:
-            format: int32
-            default: '100'
-            maximum: 100
-            minimum: 1
-            type: integer
-        - name: state
-          in: query
-          schema:
-            $ref: '#/components/schemas/LifeCycleState'
-        - name: typeId
-          in: query
-          schema:
-            format: int64
-            type: integer
-      responses:
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '200':
-          description: The corresponding documents resource
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PageResultDTO'
     post:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - DocumentControllerV1
       description: Create Document
@@ -88,8 +32,10 @@ paths:
           description: Created Document resource
           headers:
             Location:
-              description: URL for the create Document resource
+              description: URL of the entity created
               style: simple
+              schema:
+                type: string
           content:
             application/json:
               schema:
@@ -100,31 +46,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
+  /document/search:
+    post:
+      x-onecx:
+        permissions:
+          document:
+            - read
+      tags:
+        - DocumentControllerV1
+      description: Gets documents by criteria
+      operationId: getDocumentByCriteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentSearchCriteriaDTO'
+      responses:
+        '200':
+          description: The corresponding documents resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResultDTO'
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
   /document-specification:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentSpecificationControllerV1
       description: Finds all specification of documents
       operationId: getAllDocumentSpecifications
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Found all specification of documents
           content:
@@ -133,7 +93,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DocumentSpecificationDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     post:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - DocumentSpecificationControllerV1
       description: Creates specification of document
@@ -156,14 +126,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
   /document-specification/{id}:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentSpecificationControllerV1
       description: Gets document specification by id
@@ -173,28 +141,25 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentSpecificationDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     put:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - DocumentSpecificationControllerV1
       description: Updates specification of document by id
@@ -204,33 +169,30 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/DocumentSpecificationCreateUpdateDTO'
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Updated specification of document by id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentSpecificationDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
       tags:
         - DocumentSpecificationControllerV1
       description: Deletes specification of document by id
@@ -240,8 +202,7 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
         '204':
           description: Deleted specification of document by id
@@ -257,31 +218,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
   /document-type:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentTypeControllerV1
       description: Finds all types of document
       operationId: getAllTypesOfDocument
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Found all types of document
           content:
@@ -290,7 +237,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DocumentTypeDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     post:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - DocumentTypeControllerV1
       description: Creates type of document
@@ -313,14 +270,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
   /document-type/{id}:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentTypeControllerV1
       description: Gets document type by id
@@ -330,28 +285,25 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentTypeDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     put:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - DocumentTypeControllerV1
       description: Updates type of document by id
@@ -361,8 +313,7 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       requestBody:
         content:
           application/json:
@@ -381,13 +332,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
     delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
       tags:
         - DocumentTypeControllerV1
       description: Deletes type of document by id
@@ -397,8 +346,7 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
         '204':
           description: Deleted type of document by id
@@ -414,25 +362,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
+  /document/bulkupdate:
+    put:
+      x-onecx:
+        permissions:
+          document:
+            - write
+      tags:
+        - DocumentControllerV1
+      description: Bulk Update an document
+      operationId: bulkUpdateDocument
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/DocumentCreateUpdateDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentDetailDTO'
+        '404':
+          description: Not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
   /document/channels:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentControllerV1
       description: Gets all channels
       operationId: getAllChannels
       responses:
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Ok
           content:
@@ -441,8 +413,60 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ChannelDTO'
+  /document/delete-bulk-documents:
+    delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
+      tags:
+        - DocumentControllerV1
+      description: Delete Multiple Document by Ids
+      operationId: deleteBulkDocuments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '204':
+          description: Delete Documents by ids
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
+  /document/file/delete-bulk-attachment:
+    delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
+      tags:
+        - DocumentControllerV1
+      description: Delete attachment's files in bulk
+      operationId: deleteFilesInBulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not found
   /document/file/{attachmentId}:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentControllerV1
       description: Get attachment's file
@@ -452,110 +476,116 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
-        '404':
-          description: Not found
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
         '200':
           description: OK
           content:
             application/octet-stream:
               schema:
-                $ref: '#/components/schemas/InputStream'
-    post:
-      tags:
-        - DocumentControllerV1
-      description: Upload attachment's file
-      operationId: uploadFile
-      parameters:
-        - name: attachmentId
-          in: path
-          required: true
-          schema:
-            format: int64
-            type: integer
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AttachmentDTO'
-        '400':
-          description: Bad request
+                format: binary
+                type: string
         '404':
           description: Not found
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-    delete:
+  /document/file/{documentId}/attachments:
+    get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentControllerV1
-      description: Delete attachment's file
-      operationId: deleteFile
+      description: Get all the attachments of the document packaged in a zip file
+      operationId: getAllDocumentAttachmentsAsZip
       parameters:
-        - name: attachmentId
+        - name: documentId
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
+        - name: client-timezone
+          in: header
+          schema:
+            type: string
       responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+        '400':
+          description: Bad request
         '204':
-          description: No Content
-        '404':
-          description: Not found
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestException'
-  /document/files/multiple-upload:
-    post:
+          description: No content
+  /document/files/upload/failed/{id}:
+    get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentControllerV1
-      description: Upload attachment's file
-      operationId: uploadFiles
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
+      description: Get data of all the failed attachment based on document ID
+      operationId: getFailedAttachmentData
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttachmentDTO'
-        '400':
-          description: Bad request
+                type: array
+                items:
+                  $ref: '#/components/schemas/StorageUploadAuditDTO'
         '404':
           description: Not found
-        '500':
-          description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/RFCProblemDTO'
+  /document/search/show-all-documents:
+    post:
+      x-onecx:
+        permissions:
+          document:
+            - read
+      tags:
+        - DocumentControllerV1
+      description: Gets all documents by criteria
+      operationId: showAllDocumentsByCriteria
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentSearchCriteriaDTO'
+      responses:
+        '200':
+          description: The corresponding documents resource
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentDetailDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
   /document/{id}:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - DocumentControllerV1
       description: Gets Document by Id
@@ -565,28 +595,25 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentDetailDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     put:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - DocumentControllerV1
       description: Update an document
@@ -596,33 +623,30 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/DocumentCreateUpdateDTO'
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentDetailDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
       tags:
         - DocumentControllerV1
       description: Delete Document by Id
@@ -632,8 +656,7 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
         '204':
           description: Deleted Document by id
@@ -643,31 +666,130 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
+  /files/bucket/{name}:
+    post:
+      x-onecx:
+        permissions:
+          document:
+            - write
+      tags:
+        - FileControllerV1
+      summary: Creates a bucket with the given name
+      description: Create a bucket
+      operationId: createBucket
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+  /files/{bucket}/{path}:
+    get:
+      x-onecx:
+        permissions:
+          document:
+            - read
+      tags:
+        - FileControllerV1
+      summary: Download file contents
+      operationId: downloadFile
+      parameters:
+        - name: bucket
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            pattern: '.+'
+            type: string
+      responses:
+        '200':
+          description: OK
           content:
-            application/json:
+            application/octet-stream:
               schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
+                format: binary
+                type: string
+        '404':
+          description: Not found
+    put:
+      x-onecx:
+        permissions:
+          document:
+            - write
+      tags:
+        - FileControllerV1
+      summary: Uploads a file to the given location
+      description: Uploads the file
+      operationId: uploadFile
+      parameters:
+        - name: bucket
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            pattern: .+
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileMultipartBodyDTO'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad request
+    delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
+      tags:
+        - FileControllerV1
+      summary: Deletes the file from Minio object storage
+      description: Deletes the file
+      operationId: deleteFile
+      parameters:
+        - name: bucket
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            pattern: .+
+            type: string
+      responses:
+        '201':
+          description: File Deleted
+        '404':
+          description: Not Found
   /supported-mime-type:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - SupportedMimeTypeControllerV1
       description: Finds all supported mime-types
       operationId: getAllSupportedMimeTypes
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Found all supported mime-types
           content:
@@ -676,7 +798,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SupportedMimeTypeDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     post:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - SupportedMimeTypeControllerV1
       description: Creates supported mime-type
@@ -699,14 +831,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
   /supported-mime-type/{id}:
     get:
+      x-onecx:
+        permissions:
+          document:
+            - read
       tags:
         - SupportedMimeTypeControllerV1
       description: Gets supported mime-type by id
@@ -716,28 +846,25 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Ok
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SupportedMimeTypeDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     put:
+      x-onecx:
+        permissions:
+          document:
+            - write
       tags:
         - SupportedMimeTypeControllerV1
       description: Updates supported mime-type by id
@@ -747,33 +874,30 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/SupportedMimeTypeCreateUpdateDTO'
       responses:
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
         '200':
           description: Updated supported mime-type by id
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SupportedMimeTypeDTO'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RFCProblemDTO'
     delete:
+      x-onecx:
+        permissions:
+          document:
+            - delete
       tags:
         - SupportedMimeTypeControllerV1
       description: Deletes supported mime-type by id
@@ -783,8 +907,7 @@ paths:
           in: path
           required: true
           schema:
-            format: int64
-            type: integer
+            type: string
       responses:
         '204':
           description: Deleted supported mime-type by id
@@ -800,57 +923,157 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RFCProblemDTO'
-        '500':
-          description: 'Internal Server Error, please check Problem Details'
+  /document/files/upload/{documentId}:
+    post:
+      x-onecx:
+        permissions:
+          document:
+            - write
+      tags:
+        - DocumentControllerV1
+      operationId: uploadAllFiles
+      description: uploads all the files
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  $ref: '#/components/schemas/MultipartFormDataInputDTO'
+                  description: upload the multipart files
+      responses:
+        '201':
+          description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RFCProblemDTO'
+                $ref: '#/components/schemas/DocumentResponseDTO'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+
 components:
   schemas:
     AttachmentCreateUpdateDTO:
-      required:
-        - mimeTypeId
       type: object
       properties:
+        id:
+          type: string
+        name:
+          type: string
         description:
           type: string
-        id:
-          format: int64
-          type: integer
-        mimeTypeId:
-          format: int64
-          type: integer
-          nullable: false
-        name:
-          pattern: \S
-          type: string
-          nullable: false
         type:
           type: string
         validFor:
           $ref: '#/components/schemas/TimePeriodDTO'
-    ListAttachmentCreateUpdateDTO:
-      type: array
-      items:
-        $ref: '#/components/schemas/AttachmentCreateUpdateDTO'
-    CategoryCreateUpdateDTO:
+        mimeTypeId:
+          type: string
+        file:
+          type: string
+        fileName:
+          type: string
+    AttachmentDTO:
       type: object
       properties:
-        categoryVersion:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
           type: string
         id:
           type: string
         name:
           type: string
-    SetCategoryCreateUpdateDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/CategoryCreateUpdateDTO'
+        description:
+          type: string
+        type:
+          type: string
+        size:
+          type: number
+        sizeUnit:
+          $ref: '#/components/schemas/AttachmentUnit'
+        validFor:
+          $ref: '#/components/schemas/TimePeriodDTO'
+        storage:
+          type: string
+        externalStorageURL:
+          type: string
+        mimeType:
+          $ref: '#/components/schemas/SupportedMimeTypeDTO'
+        fileName:
+          type: string
+        storageUploadStatus:
+          type: boolean
+    AttachmentUnit:
+      enum:
+        - BYTES
+      type: string
+    CategoryCreateUpdateDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categoryVersion:
+          type: string
+    CategoryDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        categoryVersion:
+          type: string
     ChannelCreateUpdateDTO:
       type: object
       properties:
+        id:
+          type: string
+        name:
+          type: string
+    ChannelDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
         id:
           type: string
         name:
@@ -864,33 +1087,373 @@ components:
           type: string
         value:
           type: string
-    SetDocumentCharacteristicCreateUpdateDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/DocumentCharacteristicCreateUpdateDTO'
+    DocumentCharacteristicDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          type: string
+    DocumentCreateUpdateDTO:
+      required:
+        - name
+        - typeId
+        - channel
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        lifeCycleState:
+          $ref: '#/components/schemas/LifeCycleState'
+        documentVersion:
+          type: string
+        tags:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        typeId:
+          type: string
+        specification:
+          $ref: '#/components/schemas/DocumentSpecificationCreateUpdateDTO'
+        channel:
+          $ref: '#/components/schemas/ChannelCreateUpdateDTO'
+        documentRelationships:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentRelationshipCreateUpdateDTO'
+        characteristics:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentCharacteristicCreateUpdateDTO'
+        relatedParties:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/RelatedPartyRefCreateUpdateDTO'
+        relatedObject:
+          $ref: '#/components/schemas/RelatedObjectRefCreateUpdateDTO'
+        categories:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryCreateUpdateDTO'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentCreateUpdateDTO'
+    DocumentDetailDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        lifeCycleState:
+          $ref: '#/components/schemas/LifeCycleState'
+        documentVersion:
+          type: string
+        channel:
+          $ref: '#/components/schemas/ChannelDTO'
+        tags:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        type:
+          $ref: '#/components/schemas/DocumentTypeDTO'
+        specification:
+          $ref: '#/components/schemas/DocumentSpecificationDTO'
+        documentRelationships:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentRelationshipDTO'
+        characteristics:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentCharacteristicDTO'
+        relatedParties:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/RelatedPartyRefDTO'
+        relatedObject:
+          $ref: '#/components/schemas/RelatedObjectRefDTO'
+        categories:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryDTO'
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentDTO'
+    DocumentSearchCriteriaDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lifeCycleState:
+          type: array
+          items:
+            $ref: '#/components/schemas/LifeCycleState'
+        documentTypeId:
+          type: array
+          items:
+            type: string
+        channelName:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        createBy:
+          type: string
+        objectReferenceId:
+          type: string
+        objectReferenceType:
+          type: string
+        pageNumber:
+          type: integer
+          minimum: 0
+          default: 0
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 200
     DocumentRelationshipCreateUpdateDTO:
       type: object
       properties:
-        documentRefId:
-          format: int64
-          type: integer
         id:
           type: string
         type:
           type: string
-    SetDocumentRelationshipCreateUpdateDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/DocumentRelationshipCreateUpdateDTO'
+        documentRefId:
+          type: string
+    DocumentRelationshipDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        type:
+          type: string
+        documentRefId:
+          type: string
+    DocumentSpecificationCreateUpdateDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        specificationVersion:
+          type: string
+    DocumentSpecificationDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        specificationVersion:
+          type: string
+    DocumentTypeCreateUpdateDTO:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+    DocumentTypeDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+    FileDTO:
+      type: object
+      properties:
+        path:
+          type: string
+        invalid:
+          type: boolean
+        name:
+          type: string
+        parent:
+          type: string
+        parentFile:
+          $ref: '#/components/schemas/FileDTO'
+        absolute:
+          type: boolean
+        absolutePath:
+          type: string
+        absoluteFile:
+          $ref: '#/components/schemas/FileDTO'
+        canonicalPath:
+          type: string
+        canonicalFile:
+          $ref: '#/components/schemas/FileDTO'
+        directory:
+          type: boolean
+        file:
+          type: boolean
+        hidden:
+          type: boolean
+        totalSpace:
+          format: int64
+          type: integer
+        freeSpace:
+          format: int64
+          type: integer
+        usableSpace:
+          format: int64
+          type: integer
     LifeCycleState:
       enum:
-        - ARCHIVED
         - DRAFT
-        - RELEASED
         - REVIEW
+        - RELEASED
+        - ARCHIVED
       type: string
+    OffsetDateTimeDTO:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50-04:00
+    PageResultDTO:
+      type: object
+      properties:
+        totalElements:
+          format: int64
+          type: integer
+        number:
+          format: int32
+          type: integer
+        size:
+          format: int32
+          type: integer
+        totalPages:
+          format: int64
+          type: integer
+        stream:
+          type: array
+          items:
+            type: object
+    RFCProblemDTO:
+      required:
+        - type
+        - title
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          format: int32
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/RFCProblemDetailDTO'
+    RFCProblemDetailDTO:
+      required:
+        - message
+        - messageId
+        - messageType
+      type: object
+      properties:
+        message:
+          type: string
+        messageId:
+          type: string
+        code:
+          type: string
+        messageType:
+          type: string
     RelatedObjectRefCreateUpdateDTO:
       type: object
       properties:
@@ -898,9 +1461,31 @@ components:
           type: string
         involvement:
           type: string
+        objectReferenceType:
+          type: string
         objectReferenceId:
           type: string
+    RelatedObjectRefDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
+        creationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        creationUser:
+          type: string
+        modificationDate:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        modificationUser:
+          type: string
+        id:
+          type: string
+        involvement:
+          type: string
         objectReferenceType:
+          type: string
+        objectReferenceId:
           type: string
     RelatedPartyRefCreateUpdateDTO:
       type: object
@@ -913,235 +1498,20 @@ components:
           type: string
         validFor:
           $ref: '#/components/schemas/TimePeriodDTO'
-    SetRelatedPartyRefCreateUpdateDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/RelatedPartyRefCreateUpdateDTO'
-    SetString:
-      uniqueItems: true
-      type: array
-      items:
-        type: string
-    TimePeriodDTO:
-      type: object
-      properties:
-        endDateTime:
-          $ref: '#/components/schemas/OffsetDateTime'
-        startDateTime:
-          $ref: '#/components/schemas/OffsetDateTime'
-    OffsetDateTime:
-      format: date-time
-      type: string
-    DocumentCreateUpdateDTO:
-      required:
-        - channel
-        - typeId
-      type: object
-      properties:
-        attachments:
-          $ref: '#/components/schemas/ListAttachmentCreateUpdateDTO'
-        categories:
-          $ref: '#/components/schemas/SetCategoryCreateUpdateDTO'
-        channel:
-          allOf:
-            - $ref: '#/components/schemas/ChannelCreateUpdateDTO'
-            - nullable: false
-        characteristics:
-          $ref: '#/components/schemas/SetDocumentCharacteristicCreateUpdateDTO'
-        description:
-          type: string
-        documentRelationships:
-          $ref: '#/components/schemas/SetDocumentRelationshipCreateUpdateDTO'
-        documentVersion:
-          type: string
-        lifeCycleState:
-          $ref: '#/components/schemas/LifeCycleState'
-        name:
-          pattern: \S
-          type: string
-          nullable: false
-        relatedObject:
-          $ref: '#/components/schemas/RelatedObjectRefCreateUpdateDTO'
-        relatedParties:
-          $ref: '#/components/schemas/SetRelatedPartyRefCreateUpdateDTO'
-        specification:
-          $ref: '#/components/schemas/DocumentSpecificationCreateUpdateDTO'
-        tags:
-          $ref: '#/components/schemas/SetString'
-        typeId:
-          format: int64
-          type: integer
-          nullable: false
-    AttachmentDTO:
-      type: object
-      properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          format: int64
-          type: integer
-        description:
-          type: string
-        externalStorageURL:
-          type: string
-        mimeType:
-          $ref: '#/components/schemas/SupportedMimeTypeDTO'
-        name:
-          type: string
-        size:
-          $ref: '#/components/schemas/BigDecimal'
-        sizeUnit:
-          $ref: '#/components/schemas/AttachmentUnit'
-        storage:
-          type: string
-        type:
-          type: string
-        validFor:
-          $ref: '#/components/schemas/TimePeriodDTO'
-    ListAttachmentDTO:
-      type: array
-      items:
-        $ref: '#/components/schemas/AttachmentDTO'
-    CategoryDTO:
-      type: object
-      properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          type: string
-        categoryVersion:
-          type: string
-        name:
-          type: string
-    SetCategoryDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/CategoryDTO'
-    ChannelDTO:
-      type: object
-      properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          type: string
-        name:
-          type: string
-    DocumentCharacteristicDTO:
-      type: object
-      properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          type: string
-        name:
-          type: string
-        value:
-          type: string
-    SetDocumentCharacteristicDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/DocumentCharacteristicDTO'
-    DocumentRelationshipDTO:
-      type: object
-      properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          type: string
-        documentRefId:
-          format: int64
-          type: integer
-        type:
-          type: string
-    SetDocumentRelationshipDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/DocumentRelationshipDTO'
-    RelatedObjectRefDTO:
-      type: object
-      properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          type: string
-        involvement:
-          type: string
-        objectReferenceId:
-          type: string
-        objectReferenceType:
-          type: string
     RelatedPartyRefDTO:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
         creationUser:
           type: string
         modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
         modificationUser:
           type: string
-        version:
-          format: int32
-          type: integer
         id:
           type: string
         name:
@@ -1150,259 +1520,198 @@ components:
           type: string
         validFor:
           $ref: '#/components/schemas/TimePeriodDTO'
-    SetRelatedPartyRefDTO:
-      uniqueItems: true
-      type: array
-      items:
-        $ref: '#/components/schemas/RelatedPartyRefDTO'
-    DocumentSpecificationDTO:
+    RestExceptionDTO:
       type: object
       properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        errorCode:
+          type: object
+        parameters:
+          type: array
+          items:
+            type: object
+        namedParameters:
+          type: object
+          additionalProperties:
+            type: object
+    Status:
+      enum:
+        - OK
+        - CREATED
+        - ACCEPTED
+        - NO_CONTENT
+        - RESET_CONTENT
+        - PARTIAL_CONTENT
+        - MOVED_PERMANENTLY
+        - FOUND
+        - SEE_OTHER
+        - NOT_MODIFIED
+        - USE_PROXY
+        - TEMPORARY_REDIRECT
+        - BAD_REQUEST
+        - UNAUTHORIZED
+        - PAYMENT_REQUIRED
+        - FORBIDDEN
+        - NOT_FOUND
+        - METHOD_NOT_ALLOWED
+        - NOT_ACCEPTABLE
+        - PROXY_AUTHENTICATION_REQUIRED
+        - REQUEST_TIMEOUT
+        - CONFLICT
+        - GONE
+        - LENGTH_REQUIRED
+        - PRECONDITION_FAILED
+        - REQUEST_ENTITY_TOO_LARGE
+        - REQUEST_URI_TOO_LONG
+        - UNSUPPORTED_MEDIA_TYPE
+        - REQUESTED_RANGE_NOT_SATISFIABLE
+        - EXPECTATION_FAILED
+        - PRECONDITION_REQUIRED
+        - TOO_MANY_REQUESTS
+        - REQUEST_HEADER_FIELDS_TOO_LARGE
+        - INTERNAL_SERVER_ERROR
+        - NOT_IMPLEMENTED
+        - BAD_GATEWAY
+        - SERVICE_UNAVAILABLE
+        - GATEWAY_TIMEOUT
+        - HTTP_VERSION_NOT_SUPPORTED
+        - NETWORK_AUTHENTICATION_REQUIRED
+      type: string
+    StorageUploadAuditDTO:
+      type: object
+      properties:
+        modificationCount:
+          format: int32
+          type: integer
         creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
         creationUser:
           type: string
         modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
         modificationUser:
           type: string
-        version:
-          format: int32
-          type: integer
         id:
-          format: int64
-          type: integer
+          type: string
+        documentId:
+          type: string
+        documentName:
+          type: string
+        documentDescription:
+          type: string
+        documentVersion:
+          type: string
+        lifeCycleState:
+          type: string
+        channelId:
+          type: string
+        channelName:
+          type: string
+        documentTypeId:
+          type: string
+        documentTypeName:
+          type: string
+        attachmentId:
+          type: string
+        fileName:
+          type: string
         name:
           type: string
-        specificationVersion:
+        attachmentDescription:
           type: string
-    DocumentTypeDTO:
+        mimeTypeId:
+          type: string
+        mimeTypeName:
+          type: string
+        specificationId:
+          type: string
+        specificationName:
+          type: string
+        relatedObjectId:
+          type: string
+        involvement:
+          type: string
+        objectReferenceType:
+          type: string
+        objectReferenceId:
+          type: string
+    SupportedMimeTypeCreateUpdateDTO:
+      required:
+        - name
       type: object
       properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          format: int64
-          type: integer
         name:
+          type: string
+        description:
           type: string
     SupportedMimeTypeDTO:
       type: object
       properties:
+        modificationCount:
+          format: int32
+          type: integer
         creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
         creationUser:
           type: string
         modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
         modificationUser:
           type: string
-        version:
-          format: int32
-          type: integer
         id:
-          format: int64
-          type: integer
+          type: string
+        name:
+          type: string
         description:
           type: string
-        name:
-          type: string
-    BigDecimal:
-      type: number
-    AttachmentUnit:
-      enum:
-        - BYTES
-      type: string
-    DocumentDetailDTO:
+    TimePeriodDTO:
       type: object
       properties:
-        creationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        creationUser:
-          type: string
-        modificationDate:
-          $ref: '#/components/schemas/OffsetDateTime'
-        modificationUser:
-          type: string
-        version:
-          format: int32
-          type: integer
-        id:
-          format: int64
-          type: integer
-        attachments:
-          $ref: '#/components/schemas/ListAttachmentDTO'
-        categories:
-          $ref: '#/components/schemas/SetCategoryDTO'
-        channel:
-          $ref: '#/components/schemas/ChannelDTO'
-        characteristics:
-          $ref: '#/components/schemas/SetDocumentCharacteristicDTO'
-        description:
-          type: string
-        documentRelationships:
-          $ref: '#/components/schemas/SetDocumentRelationshipDTO'
-        documentVersion:
-          type: string
-        lifeCycleState:
-          $ref: '#/components/schemas/LifeCycleState'
-        name:
-          type: string
-        relatedObject:
-          $ref: '#/components/schemas/RelatedObjectRefDTO'
-        relatedParties:
-          $ref: '#/components/schemas/SetRelatedPartyRefDTO'
-        specification:
-          $ref: '#/components/schemas/DocumentSpecificationDTO'
-        tags:
-          $ref: '#/components/schemas/SetString'
-        type:
-          $ref: '#/components/schemas/DocumentTypeDTO'
-    RFCProblemDetailDTO:
+        startDateTime:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+        endDateTime:
+          $ref: '#/components/schemas/OffsetDateTimeDTO'
+    TraceableDTO:
       type: object
       properties:
-        code:
+        createdBy:
           type: string
-        message:
+        createdDate:
           type: string
-        messageId:
+          format: date-time
+        lastModifiedBy:
           type: string
-        messageType:
+        lastModifiedDate:
           type: string
-    ListRFCProblemDetailDTO:
-      type: array
-      items:
-        $ref: '#/components/schemas/RFCProblemDetailDTO'
-    RFCProblemDTO:
+          format: date-time
+
+    DocumentResponseDTO:
+      allOf:
+        - $ref: '#/components/schemas/TraceableDTO'
+        - type: object
+          properties:
+            attachmentResponse:
+              type: object
+              additionalProperties:
+                type: integer
+              description: Map of attachment names to their response codes
+    FileMultipartBodyDTO:
       type: object
       properties:
-        detail:
-          type: string
-        instance:
-          type: string
-        problems:
-          $ref: '#/components/schemas/ListRFCProblemDetailDTO'
-        status:
-          format: int32
-          type: integer
-        title:
-          type: string
-        type:
-          type: string
-    MapStringObject:
-      type: object
-      additionalProperties: {}
-    ListObject:
-      type: array
-      items: {}
-    Status:
-      enum:
-        - ACCEPTED
-        - BAD_GATEWAY
-        - BAD_REQUEST
-        - CONFLICT
-        - CREATED
-        - EXPECTATION_FAILED
-        - FORBIDDEN
-        - FOUND
-        - GATEWAY_TIMEOUT
-        - GONE
-        - HTTP_VERSION_NOT_SUPPORTED
-        - INTERNAL_SERVER_ERROR
-        - LENGTH_REQUIRED
-        - METHOD_NOT_ALLOWED
-        - MOVED_PERMANENTLY
-        - NETWORK_AUTHENTICATION_REQUIRED
-        - NOT_ACCEPTABLE
-        - NOT_FOUND
-        - NOT_IMPLEMENTED
-        - NOT_MODIFIED
-        - NO_CONTENT
-        - OK
-        - PARTIAL_CONTENT
-        - PAYMENT_REQUIRED
-        - PRECONDITION_FAILED
-        - PRECONDITION_REQUIRED
-        - PROXY_AUTHENTICATION_REQUIRED
-        - REQUESTED_RANGE_NOT_SATISFIABLE
-        - REQUEST_ENTITY_TOO_LARGE
-        - REQUEST_HEADER_FIELDS_TOO_LARGE
-        - REQUEST_TIMEOUT
-        - REQUEST_URI_TOO_LONG
-        - RESET_CONTENT
-        - SEE_OTHER
-        - SERVICE_UNAVAILABLE
-        - TEMPORARY_REDIRECT
-        - TOO_MANY_REQUESTS
-        - UNAUTHORIZED
-        - UNSUPPORTED_MEDIA_TYPE
-        - USE_PROXY
-      type: string
-    RestException:
+        file:
+          type: File
+    FileInfoDTO:
       type: object
       properties:
-        errorCode:
-          type: object
-        namedParameters:
-          $ref: '#/components/schemas/MapStringObject'
-        parameters:
-          $ref: '#/components/schemas/ListObject'
-        status:
-          $ref: '#/components/schemas/Status'
-    ListObject1:
-      type: array
-      items:
-        type: object
-    PageResultDTO:
-      type: object
-      properties:
-        number:
-          format: int32
-          type: integer
-        size:
-          format: int32
-          type: integer
-        stream:
-          $ref: '#/components/schemas/ListObject1'
-        totalElements:
-          format: int64
-          type: integer
-        totalPages:
-          format: int64
-          type: integer
-    InputStream:
-      type: object
-    DocumentSpecificationCreateUpdateDTO:
-      type: object
-      properties:
-        name:
-          pattern: \S
+        contentType:
           type: string
-          nullable: false
-        specificationVersion:
+          description: Type of file based on the InputStream.
+        path:
           type: string
-    DocumentTypeCreateUpdateDTO:
+          description: The path of the file.
+        bucket:
+          type: string
+          description: Name of bucket.
+    MultipartFormDataInputDTO:
       type: object
-      properties:
-        name:
-          pattern: \S
-          type: string
-          nullable: false
-    SupportedMimeTypeCreateUpdateDTO:
-      type: object
-      properties:
-        description:
-          type: string
-        name:
-          pattern: \S
-          type: string
-          nullable: false

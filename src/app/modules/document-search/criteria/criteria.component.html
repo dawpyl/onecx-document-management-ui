@@ -17,15 +17,15 @@
     <div class="col-12 md:col-4">
       <span class="p-float-label">
         <p-multiSelect
-          id="typeId"
+          id="documentTypeId"
           [options]="documentTypes"
-          formControlName="typeId"
+          formControlName="documentTypeId"
           appendTo="body"
           [autoDisplayFirst]="false"
           [addOnBlur]="true"
           display="chip"
         ></p-multiSelect>
-        <label for="typeId">
+        <label for="documentTypeId">
           {{ 'DOCUMENT_SEARCH.CRITERIA.DOCUMENT_TYPE' | translate }}
         </label>
       </span>

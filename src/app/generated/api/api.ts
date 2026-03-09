@@ -4,11 +4,8 @@ export * from './documentSpecificationControllerV1.service';
 import { DocumentSpecificationControllerV1APIService } from './documentSpecificationControllerV1.service';
 export * from './documentTypeControllerV1.service';
 import { DocumentTypeControllerV1APIService } from './documentTypeControllerV1.service';
+export * from './fileControllerV1.service';
+import { FileControllerV1APIService } from './fileControllerV1.service';
 export * from './supportedMimeTypeControllerV1.service';
 import { SupportedMimeTypeControllerV1APIService } from './supportedMimeTypeControllerV1.service';
-export const APIS = [
-  DocumentControllerV1APIService,
-  DocumentSpecificationControllerV1APIService,
-  DocumentTypeControllerV1APIService,
-  SupportedMimeTypeControllerV1APIService,
-];
+export const APIS = [DocumentControllerV1APIService, DocumentSpecificationControllerV1APIService, DocumentTypeControllerV1APIService, FileControllerV1APIService, SupportedMimeTypeControllerV1APIService];

@@ -18,8 +18,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import {
   DocumentControllerV1APIService,
+  DocumentSearchCriteriaDTO,
   DocumentTypeControllerV1APIService,
-  GetDocumentByCriteriaRequestParams,
   LifeCycleState,
 } from 'src/app/generated';
 import { TranslateServiceMock } from 'src/app/test/TranslateServiceMock';
@@ -70,17 +70,17 @@ describe('DocumentCriteriaAdvancedComponent', () => {
   });
 
   it('should create form', () => {
-    let critiera: GetDocumentByCriteriaRequestParams = {
+    let critiera: DocumentSearchCriteriaDTO = {
       id: '1',
       channelName: 'Test',
       name: 'Test',
-      page: 1,
-      size: 1,
-      state: [LifeCycleState.ARCHIVED],
-      typeId: ['1'],
+      pageNumber: 1,
+      pageSize: 1,
+      lifeCycleState: [LifeCycleState.ARCHIVED],
+      documentTypeId: ['1'],
       startDate: '03.21.23',
       endDate: '05.21.23',
-      createdBy: 'new',
+      createBy: 'new',
       objectReferenceId: 'obi',
       objectReferenceType: 'obt',
     };

@@ -11,14 +11,18 @@
  */
 
 
-export interface CategoryDTO { 
-    modificationCount?: number;
-    creationDate?: string;
-    creationUser?: string;
-    modificationDate?: string;
-    modificationUser?: string;
-    id?: string;
-    name?: string;
-    categoryVersion?: string;
+export interface FileInfoDTO { 
+    /**
+     * Type of file based on the InputStream.
+     */
+    contentType?: string;
+    /**
+     * The path of the file.
+     */
+    path?: string;
+    /**
+     * Name of bucket.
+     */
+    bucket?: string;
 }
 

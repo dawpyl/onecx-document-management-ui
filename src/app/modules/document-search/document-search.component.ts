@@ -21,7 +21,7 @@ import { DocumentCriteriaAdvancedComponent } from './document-criteria-advanced/
 import {
   DocumentControllerV1APIService,
   DocumentDetailDTO,
-  GetDocumentByCriteriaRequestParams,
+  DocumentSearchCriteriaDTO,
 } from 'src/app/generated';
 import { DataSharingService } from 'src/app/shared/data-sharing.service';
 import { convertToCSV } from 'src/app/utils';
@@ -59,7 +59,7 @@ export class DocumentSearchComponent
   headerActions: Action[] = [];
   helpArticleId = 'PAGE_DOCUMENT_MGMT_SEARCH';
   mode: string;
-  criteria: GetDocumentByCriteriaRequestParams = {};
+  criteria: DocumentSearchCriteriaDTO = {};
   translatedData: any;
   updatedDataView: any;
   items: MenuItem[];
@@ -150,13 +150,13 @@ export class DocumentSearchComponent
       this.criteria.endDate =
         this.datepipe.transform(this.criteria.endDate, 'yyyy-MM-dd') + ' 23:59';
     }
-    this.criteria.size = size;
-    this.criteria.page = page;
+    this.criteria.pageSize = size;
+    this.criteria.pageNumber = page;
     this.page = page;
 
     this.isLoading = true;
 
-    return this.documentV1Service.getDocumentByCriteria(this.criteria).pipe(
+    return this.documentV1Service.getDocumentByCriteria({ documentSearchCriteriaDTO: this.criteria }).pipe(
       finalize(() => (this.isLoading = false)),
       map((data: any) => {
         if (!usePreviousCriteria) {

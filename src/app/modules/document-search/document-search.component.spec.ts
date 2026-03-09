@@ -399,7 +399,7 @@ describe('DocumentSearchComponent', () => {
     expect(component.completeElements).toBe(0);
     expect(component.searchedResults).toEqual([]);
     expect(documentV1Service.getDocumentByCriteria).toHaveBeenCalledWith(
-      component.criteria
+      { documentSearchCriteriaDTO: component.criteria }
     );
   }));
 });

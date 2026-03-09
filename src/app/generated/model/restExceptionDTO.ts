@@ -9,16 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Status } from './status';
 
 
-export interface CategoryDTO { 
-    modificationCount?: number;
-    creationDate?: string;
-    creationUser?: string;
-    modificationDate?: string;
-    modificationUser?: string;
-    id?: string;
-    name?: string;
-    categoryVersion?: string;
+export interface RestExceptionDTO { 
+    status?: Status;
+    errorCode?: object;
+    parameters?: Array<object>;
+    namedParameters?: { [key: string]: object; };
 }
 

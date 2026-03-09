@@ -1,5 +1,5 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Pipe, PipeTransform } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -31,6 +31,7 @@ describe('DocumentDescriptionComponent', () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [DocumentDescriptionComponent, TranslatePipeMock],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: TranslateService, useClass: TranslateServiceMock },
         { provide: DataSharingService },
@@ -167,10 +168,10 @@ describe('DocumentDescriptionComponent', () => {
   it('should load document status correctly', () => {
     component.loadDocumentStatusWrapper();
     expect(component.documentStatus).toEqual([
-      { label: 'ARCHIVED', value: 'ARCHIVED' },
       { label: 'DRAFT', value: 'DRAFT' },
-      { label: 'RELEASED', value: 'RELEASED' },
       { label: 'REVIEW', value: 'REVIEW' },
+      { label: 'RELEASED', value: 'RELEASED' },
+      { label: 'ARCHIVED', value: 'ARCHIVED' },
     ]);
     fixture.detectChanges();
   });
